@@ -25,6 +25,18 @@ namespace productCategoryModel.Sevices
             dbContext.SaveChanges();
         }
 
+        public bool Remove(Category category)
+        {
+            if (CategoryStatus(category))
+            {
+                dbContext.Remove<Category>(category);
+                dbContext.SaveChanges();
+                return true;
+            }
+            else
+                return false;
+        }
+
         public void Edit(Category category, string name)
         {
             category.Name = name;
@@ -52,28 +64,11 @@ namespace productCategoryModel.Sevices
                 return false;
             return true;
         }
-        public bool Remove(Category category)
-        {
-            if (CategoryStatus(category))
-            {
-                dbContext.Remove<Category>(category);
-                dbContext.SaveChanges();
-                return true;
-            }
-            else
-                return false;
-        }
 
         private bool CategoryStatus(Category category)
         {
             foreach (var product in dbContext.Products)
-            {
-                if (product.CategoryId == category.Id)
-                {
-                    return false;
-                }
-            }
-
+                if (product.CategoryId == category.Id) return false;
             return true;
         }
     }
